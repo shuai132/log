@@ -1,11 +1,23 @@
 //
-// 方便打印日志 为了输出顺序一致 错误也使用stdout而不用stderr 使用ERROR前缀
+// 方便打印日志
+// 宏    含义    作用
+// LOGF: FORMAT 等效于printf
+// LOGT: TAG    第一个参数为tag
+// LOGI: INFO   会输出文件名信息
+// LOGE: ERROR  错误信息 会有ERROR:前缀
+// LOGD: DEBUG  debug模式(NDEBUG未定义)以LOGI输出 release模式无输出
+// 注意: 为了保证输出顺序 错误也使用stdout而不用stderr
 //
 
 #pragma once
 
+#ifdef __cplusplus
+#include <cstdio>
+#include <cstring>
+#else
 #include <stdio.h>
 #include <string.h>
+#endif
 
 // Truncates the full __FILE__ path, only displaying the basename
 #define __FILENAME__ \
@@ -19,7 +31,7 @@
                                 } while(0)
 
 #ifdef NDEBUG
-    #define LOGD(fmt, ...)  ((void)0)
+#define LOGD(fmt, ...)  ((void)0)
 #else
-    #define LOGD(fmt, ...)  LOGI(fmt, ##__VA_ARGS__)
+#define LOGD(fmt, ...)  LOGI(fmt, ##__VA_ARGS__)
 #endif
