@@ -6,5 +6,6 @@ int main() {
     LOGI("LOGI");
     LOGT("TAG", "LOGT");
     LOGE("ERROR");
+    //FATAL("FATAL");
     return 0;
 }

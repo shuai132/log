@@ -12,13 +12,9 @@
 
 #pragma once
 
-#ifdef __cplusplus
-#include <cstdio>
-#include <cstring>
-#else
 #include <stdio.h>
 #include <string.h>
-#endif
+#include <stdlib.h>
 
 // Truncates the full __FILE__ path, only displaying the basename
 #define __FILENAME__ \
@@ -36,3 +32,5 @@
 #else
 #define LOGD(fmt, ...)          do{ printf("\033[33m%s: " fmt "\033[m\n", __FILENAME__, ##__VA_ARGS__); } while(0)
 #endif
+
+#define FATAL(fmt, ...)         do{ LOGE(fmt, ##__VA_ARGS__); exit(EXIT_FAILURE); } while(0)
