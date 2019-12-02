@@ -1,11 +1,13 @@
+#define LOG_NOT_EXIT_ON_FATAL
 #include "log.h"
 
 int main() {
-    LOG("LOG");
-    LOGD("DEBUG");
-    LOGI("LOGI");
-    LOGT("TAG", "LOGT");
-    LOGE("ERROR");
-    //FATAL("FATAL");
+    LOG("log");
+    LOGT("T", "msg with tag");
+    LOGD("debug");
+    LOGI("info");
+    LOGW("warn");
+    LOGE("error");
+    FATAL("fatal error");
     return 0;
 }
