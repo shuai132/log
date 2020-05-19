@@ -8,16 +8,18 @@
  * LOG_NDEBUG               关闭LOGD的输出
  * LOG_SHOW_VERBOSE         显示LOGV的输出
  * LOG_NOT_EXIT_ON_FATAL    FATAL默认退出程序 添加此宏将不退出
+ *
+ * 其他配置项
+ * LOG_PRINTF_IMPL          定义输出实现（默认使用printf库）
+ * 并添加形如int LOG_PRINTF_IMPL(const char *fmt, ...)的实现
  */
 
 #pragma once
 
 #ifdef __cplusplus
-#include <cstdio>
 #include <cstring>
 #include <cstdlib>
 #else
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #endif
@@ -69,16 +71,28 @@
 
 #define LOG_END                 LOG_COLOR_END LOG_LINE_END
 
-#define LOG(fmt, ...)           do{ printf(LOG_COLOR_GREEN "[G]: " fmt LOG_END, ##__VA_ARGS__); } while(0)
-#define LOGT(tag, fmt, ...)     do{ printf(LOG_COLOR_BLUE "[" tag "]: " fmt LOG_END, ##__VA_ARGS__); } while(0)
-#define LOGI(fmt, ...)          do{ printf(LOG_COLOR_YELLOW "[I]: %s: " fmt LOG_END, LOG_BASE_FILENAME, ##__VA_ARGS__); } while(0)
-#define LOGW(fmt, ...)          do{ printf(LOG_COLOR_CARMINE "[W]: %s: %s: %d: " fmt LOG_END, \
+#ifndef LOG_PRINTF_IMPL
+#ifdef __cplusplus
+#include <cstdio>
+#else
+#include <stdio.h>
+#endif
+#define LOG_PRINTF_IMPL(...)    printf(__VA_ARGS__) // NOLINT(bugprone-lambda-function-name)
+#else
+extern int LOG_PRINTF_IMPL(const char *fmt, ...);
+#endif
+
+#define LOG(fmt, ...)           do{ LOG_PRINTF_IMPL(LOG_COLOR_GREEN "[G]: " fmt LOG_END, ##__VA_ARGS__); } while(0)
+
+#define LOGT(tag, fmt, ...)     do{ LOG_PRINTF_IMPL(LOG_COLOR_BLUE "[" tag "]: " fmt LOG_END, ##__VA_ARGS__); } while(0)
+#define LOGI(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_YELLOW "[I]: %s: " fmt LOG_END, LOG_BASE_FILENAME, ##__VA_ARGS__); } while(0)
+#define LOGW(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_CARMINE "[W]: %s: %s: %d: " fmt LOG_END, \
                                     LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); \
                                 } while(0)
-#define LOGE(fmt, ...)          do{ printf(LOG_COLOR_RED "[E]: %s: %s: %d: " fmt LOG_END, \
+#define LOGE(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_RED "[E]: %s: %s: %d: " fmt LOG_END, \
                                     LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); \
                                 } while(0)
-#define FATAL(fmt, ...)         do{ printf(LOG_COLOR_CYAN "[F]: %s: %s: %d: " fmt LOG_END, \
+#define FATAL(fmt, ...)         do{ LOG_PRINTF_IMPL(LOG_COLOR_CYAN "[F]: %s: %s: %d: " fmt LOG_END, \
                                     LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); \
                                     LOG_EXIT_PROGRAM(); \
                                 } while(0)
@@ -86,11 +100,11 @@
 #if defined(NDEBUG) || defined(LOG_NDEBUG)
 #define LOGD(fmt, ...)          ((void)0)
 #else
-#define LOGD(fmt, ...)          do{ printf(LOG_COLOR_DEFAULT "[D]: %s: " fmt LOG_END, LOG_BASE_FILENAME, ##__VA_ARGS__); } while(0)
+#define LOGD(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_DEFAULT "[D]: %s: " fmt LOG_END, LOG_BASE_FILENAME, ##__VA_ARGS__); } while(0)
 #endif
 
 #if defined(LOG_SHOW_VERBOSE)
-#define LOGV(fmt, ...)          do{ printf(LOG_COLOR_DEFAULT "[V]: %s: " fmt LOG_END, LOG_BASE_FILENAME, ##__VA_ARGS__); } while(0)
+#define LOGV(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_DEFAULT "[V]: %s: " fmt LOG_END, LOG_BASE_FILENAME, ##__VA_ARGS__); } while(0)
 #else
 #define LOGV(fmt, ...)          ((void)0)
 #endif
