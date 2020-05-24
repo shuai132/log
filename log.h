@@ -45,7 +45,7 @@
     strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
 #define LOG_WITH_COLOR
-#if defined(_WIN32) || defined(LOG_FOR_MCU)
+#if defined(_WIN32) || defined(__ANDROID__) || defined(LOG_FOR_MCU)
 #undef LOG_WITH_COLOR
 #endif
 
@@ -71,13 +71,20 @@
 
 #define LOG_END                 LOG_COLOR_END LOG_LINE_END
 
+#if __ANDROID__
+#include <android/log.h>
+#define LOG_PRINTF(...)         __android_log_print(ANDROID_LOG_DEBUG, "LOG", __VA_ARGS__)
+#else
+#define LOG_PRINTF(...)         printf(__VA_ARGS__)
+#endif
+
 #ifndef LOG_PRINTF_IMPL
 #ifdef __cplusplus
 #include <cstdio>
 #else
 #include <stdio.h>
 #endif
-#define LOG_PRINTF_IMPL(...)    printf(__VA_ARGS__) // NOLINT(bugprone-lambda-function-name)
+#define LOG_PRINTF_IMPL(...)    LOG_PRINTF(__VA_ARGS__) // NOLINT(bugprone-lambda-function-name)
 #else
 extern int LOG_PRINTF_IMPL(const char *fmt, ...);
 #endif
