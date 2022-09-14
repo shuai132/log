@@ -55,8 +55,7 @@
 #endif
 #endif
 
-#define LOG_BASE_FILENAME       (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : \
-                                strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#define LOG_BASE_FILENAME       (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
 #define LOG_WITH_COLOR
 
@@ -112,16 +111,9 @@ extern int LOG_PRINTF_IMPL(const char *fmt, ...);
 
 #define LOGT(tag, fmt, ...)     do{ LOG_PRINTF_IMPL(LOG_COLOR_BLUE "[" tag "]: " fmt LOG_END, ##__VA_ARGS__); } while(0)
 #define LOGI(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_YELLOW "[I]: %s: " fmt LOG_END, LOG_BASE_FILENAME, ##__VA_ARGS__); } while(0)
-#define LOGW(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_CARMINE "[W]: %s: %s: %d: " fmt LOG_END, \
-                                    LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); \
-                                } while(0)
-#define LOGE(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_RED "[E]: %s: %s: %d: " fmt LOG_END, \
-                                    LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); \
-                                } while(0)
-#define LOGF(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_CYAN "[!]: %s: %s: %d: " fmt LOG_END, \
-                                    LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); \
-                                    LOG_EXIT_PROGRAM(); \
-                                } while(0)
+#define LOGW(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_CARMINE "[W]: %s: %s: %d: " fmt LOG_END, LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); } while(0)
+#define LOGE(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_RED "[E]: %s: %s: %d: " fmt LOG_END, LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); } while(0)
+#define LOGF(fmt, ...)          do{ LOG_PRINTF_IMPL(LOG_COLOR_CYAN "[!]: %s: %s: %d: " fmt LOG_END, LOG_BASE_FILENAME, __func__, __LINE__, ##__VA_ARGS__); LOG_EXIT_PROGRAM(); } while(0)
 
 #if defined(LOG_IN_LIB) && !defined(LOG_SHOW_DEBUG) && !defined(LOG_NDEBUG)
 #define LOG_NDEBUG
