@@ -27,7 +27,7 @@ int main() {
     LOGI("info");
     LOGW("warn");
     LOGE("error");
-    FATAL("fatal error");
+    LOGF("fatal");
     return 0;
 }
 ```
@@ -40,5 +40,5 @@ Output:
 [I]: example.c: info
 [W]: example.c: main: 9: warn
 [E]: example.c: main: 10: error
-[!]: example.c: main: 11: fatal error
+[!]: example.c: main: 11: fatal
 ```
