@@ -8,6 +8,6 @@ int main() {
     LOGI("info");
     LOGW("warn");
     LOGE("error");
-    FATAL("fatal error");
+    LOGF("fatal");
     return 0;
 }
