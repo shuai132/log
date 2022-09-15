@@ -91,7 +91,7 @@
 
 #if __ANDROID__
 #include <android/log.h>
-#define LOG_PRINTF(...)         __android_log_print(ANDROID_LOG_DEBUG, "LOG", __VA_ARGS__)
+#define LOG_PRINTF(...)         __android_log_print(ANDROID_L##OG_DEBUG, "LOG", __VA_ARGS__)
 #else
 #define LOG_PRINTF(...)         printf(__VA_ARGS__)
 #endif
