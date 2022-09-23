@@ -10,7 +10,7 @@ LOG for C/C++ project, by wrapper and enhance `printf`.
 * Single header file
 * With color on Unix platform
 * Auto print filename and lines
-* Auto line feed by `\n`, can be replaced to `\r\n` by define `LOG_LINE_END_CRLF`
+* Auto line feed `\r`, `\n` or `\r\n` by define `LOG_LINE_END_AUTO`, it depends on platform
 * Release mode(if defined `NDEBUG` or defined `LOG_NDEBUG`) `LOGD` will be ignored
 
 ## Usage

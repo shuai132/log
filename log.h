@@ -6,7 +6,7 @@
  * LOG_NDEBUG               关闭LOGD的输出
  * LOG_SHOW_VERBOSE         显示LOGV的输出
  * LOG_DISABLE_COLOR        禁用颜色显示
- * LOG_LINE_END_CRLF        默认是\n结尾 添加此宏将以\r\n结尾
+ * LOG_LINE_END_AUTO        添加此宏将根据所用的platform决定以哪种方式结尾
  * LOG_FOR_MCU              MCU项目可配置此宏 更适用于MCU环境
  * LOG_NOT_EXIT_ON_FATAL    FATAL默认退出程序 添加此宏将不退出
  *
@@ -39,10 +39,22 @@
 #include <stdlib.h>
 #endif
 
-#ifdef  LOG_LINE_END_CRLF
+#ifdef LOG_LINE_END_AUTO
+#if defined(_WIN32)
+#define LOG_LINE_END            "\r\n"
+#elif defined(__ANDROID__)
+#define LOG_LINE_END            "\n"
+#elif defined(__linux__) || defined(__unix__)
+#define LOG_LINE_END            "\n"
+#elif defined(__APPLE__)
+#define LOG_LINE_END            "\r"
+#elif defined(LOG_FOR_MCU)
 #define LOG_LINE_END            "\r\n"
 #else
-#define LOG_LINE_END            "\n"
+#define LOG_LINE_END            "\r\n"
+#endif
+#else
+#define LOG_LINE_END            ""
 #endif
 
 #ifdef LOG_NOT_EXIT_ON_FATAL
