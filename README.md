@@ -34,11 +34,11 @@ int main() {
 
 Output:
 ```text
-[*]: log
-[T]: msg with tag
-[D]: example.c: debug
-[I]: example.c: info
-[W]: example.c: main: 9: warn
-[E]: example.c: main: 10: error
-[!]: example.c: main: 11: fatal
+[*]: example.c:5 log
+[T]: example.c:6 msg with tag
+[D]: example.c:7 debug
+[I]: example.c:8 info
+[W]: example.c:9 [main] warn
+[E]: example.c:10 [main] error
+[!]: example.c:11 [main] fatal
 ```
