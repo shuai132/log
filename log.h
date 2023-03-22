@@ -9,6 +9,7 @@
  * LOG_LINE_END_CRLF        默认是\n结尾 添加此宏将以\r\n结尾
  * LOG_FOR_MCU              MCU项目可配置此宏 更适用于MCU环境
  * LOG_NOT_EXIT_ON_FATAL    FATAL默认退出程序 添加此宏将不退出
+ * LOG_ENABLE_THREAD_SAFE   开启线程安全支持
  *
  * 其他配置项
  * LOG_PRINTF_IMPL          定义输出实现（默认使用printf）
@@ -102,7 +103,22 @@
 #else
 #include <stdio.h>
 #endif
-#define LOG_PRINTF_IMPL(...)    LOG_PRINTF(__VA_ARGS__) // NOLINT(bugprone-lambda-function-name)
+
+#ifdef LOG_ENABLE_THREAD_SAFE
+#include <mutex>
+struct LOG_Global {
+static std::mutex& mutex() {
+ static std::mutex mutex;
+ return mutex;
+}
+};
+#define LOG_PRINTF_IMPL(...)    \
+std::lock_guard<std::mutex> lock(LOG_Global::mutex()); \
+LOG_PRINTF(__VA_ARGS__)
+#else
+#define LOG_PRINTF_IMPL(...)    LOG_PRINTF(__VA_ARGS__)
+#endif
+
 #else
 extern int LOG_PRINTF_IMPL(const char *fmt, ...);
 #endif
