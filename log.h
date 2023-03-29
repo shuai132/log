@@ -32,6 +32,9 @@
 
 // clang-format off
 
+// 自定义配置
+//#include "log_config.h"
+
 // 在库中使用时需取消注释
 //#define LOG_IN_LIB
 
