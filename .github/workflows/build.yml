@@ -13,5 +13,8 @@ jobs:
       - name: cmake build
         run: mkdir build && cd build && cmake .. && make
 
-      - name: run
+      - name: example.c
+        run: cd build && ./log_example
+
+      - name: example.cpp
         run: cd build && ./log_example

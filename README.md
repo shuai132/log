@@ -6,17 +6,17 @@ log for C/C++ project, by wrapper and enhance `printf`.
 
 ## Features
 
-* Support C and C++
-* Single header file
-* With color on Unix platform
-* Auto print filename and lines
-* Auto line feed by `\n`, can be replaced to `\r\n` by define `LOG_LINE_END_CRLF`
-* Release mode(if defined `NDEBUG` or defined `LOG_NDEBUG`) `LOGD` will be ignored
-* Support thread safe
+* One header file
+* Colors on Unix
+* Print filename and lines automatically
+* Line feed with `\n`, or `\r\n` with `LOG_LINE_END_CRLF`
+* Ignores `LOGD` in release mode
+* Support thread safe and thread id
+* Support DateTime
 
 ## Usage
 
-[example.c](example.cpp)example.c
+[example](example.cpp)
 
 ```c
 #define LOG_NOT_EXIT_ON_FATAL
@@ -39,12 +39,12 @@ int main() {
 Output:
 
 ```text
-[*]: example.cpp:6 log
-[T]: example.cpp:7 msg with tag
-[D]: example.cpp:8 debug
-[I]: example.cpp:9 info
-[W]: example.cpp:10 [main] warn
-[E]: example.cpp:11 [main] error
-[!]: example.cpp:12 [main] fatal
-[E]: example.cpp:13 [operator()] in lambda
+2023-03-29 18:11:23.479 0x1f8934140 [*]: example.cpp:4 log
+2023-03-29 18:11:23.479 0x1f8934140 [T]: example.cpp:5 msg with tag
+2023-03-29 18:11:23.479 0x1f8934140 [D]: example.cpp:6 debug
+2023-03-29 18:11:23.479 0x1f8934140 [I]: example.cpp:7 info
+2023-03-29 18:11:23.479 0x1f8934140 [W]: example.cpp:8 [main] warn
+2023-03-29 18:11:23.479 0x1f8934140 [E]: example.cpp:9 [main] error
+2023-03-29 18:11:23.479 0x1f8934140 [!]: example.cpp:10 [main] fatal
+2023-03-29 18:11:23.479 0x1f8934140 [E]: example.cpp:11 [operator()] in lambda
 ```

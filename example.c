@@ -8,6 +8,5 @@ int main() {
   LOGW("warn");
   LOGE("error");
   LOGF("fatal");
-  [] { LOGE("in lambda"); }();
   return 0;
 }
