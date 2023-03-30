@@ -163,6 +163,7 @@ return ss.str();
 #endif
 
 #ifdef LOG_ENABLE_DATE_TIME
+#include <chrono>
 #include <sstream>
 #include <iomanip>
 namespace LOG {
