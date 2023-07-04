@@ -46,5 +46,6 @@ Output:
 2023-03-29 18:11:23.479 0x1f8934140 [W]: example.cpp:8 [main] warn
 2023-03-29 18:11:23.479 0x1f8934140 [E]: example.cpp:9 [main] error
 2023-03-29 18:11:23.479 0x1f8934140 [!]: example.cpp:10 [main] fatal
-2023-03-29 18:11:23.479 0x1f8934140 [E]: example.cpp:11 [operator()] in lambda
+2023-03-29 18:11:23.479 0x1f8934140 [V]: example.cpp:11 verbose
+2023-03-29 18:11:23.479 0x1f8934140 [E]: example.cpp:12 [operator()] in lambda
 ```

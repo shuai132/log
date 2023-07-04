@@ -8,5 +8,6 @@ int main() {
   LOGW("warn");
   LOGE("error");
   LOGF("fatal");
+  LOGV("verbose");
   return 0;
 }

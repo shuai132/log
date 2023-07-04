@@ -5,7 +5,11 @@ project(LOG)
 set(CMAKE_CXX_STANDARD 11)
 add_compile_options(-Wall)
 
-add_compile_definitions(LOG_NOT_EXIT_ON_FATAL)
+add_compile_definitions(
+        LOG_NOT_EXIT_ON_FATAL
+        LOG_SHOW_VERBOSE
+        ANDROID_STANDALONE
+)
 
 # default
 add_executable(log_example_c example.c)
