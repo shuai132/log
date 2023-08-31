@@ -143,7 +143,10 @@
 #include <mutex>
 struct LOG_Mutex {
 static std::mutex& mutex() {
-static std::mutex mutex;
+// 1. never delete, avoid destroy before user log
+// 2. static memory, avoid memory fragmentation
+static char memory[sizeof(std::mutex)];
+static std::mutex& mutex = *(new (memory) std::mutex());
 return mutex;
 }
 };
