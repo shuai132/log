@@ -24,14 +24,13 @@ jobs:
           cmake .. -G "MinGW Makefiles"
           mingw32-make -j2
 
-      - name: example.c
-        shell: powershell
-        run: |
-          cd build
-          ./log_example_c.exe
-
-      - name: example.cpp
+      - name: test
         shell: powershell
         run: |
           cd build
           ./log_example.exe
+          ./log_example_c.exe
+          ./log_example_disable_thread_safe.exe
+          ./log_example_disable_thread_id.exe
+          ./log_example_disable_date_time.exe
+          ./log_example_disable_ts_ti_dt.exe

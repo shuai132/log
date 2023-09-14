@@ -18,8 +18,12 @@ jobs:
       - name: cmake build
         run: mkdir build && cd build && cmake .. && make -j2
 
-      - name: example.c
-        run: cd build && ./log_example_c
-
-      - name: example.cpp
-        run: cd build && ./log_example
+      - name: test
+        run: |
+          cd build
+          ./log_example
+          ./log_example_c
+          ./log_example_disable_thread_safe
+          ./log_example_disable_thread_id
+          ./log_example_disable_date_time
+          ./log_example_disable_ts_ti_dt
