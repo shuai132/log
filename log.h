@@ -174,10 +174,16 @@ extern int LOG_PRINTF_IMPL(const char *fmt, ...);
 #ifdef LOG_ENABLE_THREAD_ID
 #ifndef L_O_G_NS_GET_TID
 #define L_O_G_NS_GET_TID L_O_G_NS_GET_TID
-#include <sys/syscall.h>
 #include <cstdint>
+#ifdef _WIN32
+struct L_O_G_NS_GET_TID {
+static inline uint32_t get_tid() {
+  return GetCurrentThreadId();
+}
+};
+#elif defined(__linux__)
+#include <sys/syscall.h>
 #include <unistd.h>
-#ifdef __linux__
 struct L_O_G_NS_GET_TID {
 static inline uint32_t get_tid() {
   return syscall(SYS_gettid);
