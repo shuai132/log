@@ -1,4 +1,4 @@
-name: build
+name: Ubuntu
 
 on:
   push:
@@ -11,14 +11,15 @@ on:
 jobs:
   Linux:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
       - name: cmake build
-        run: mkdir build && cd build && cmake .. && make
+        run: mkdir build && cd build && cmake .. && make -j2
 
       - name: example.c
-        run: cd build && ./log_example
+        run: cd build && ./log_example_c
 
       - name: example.cpp
         run: cd build && ./log_example

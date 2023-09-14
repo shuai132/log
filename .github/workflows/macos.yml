@@ -1,0 +1,25 @@
+name: macOS
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  macOS:
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: cmake build
+        run: mkdir build && cd build && cmake .. && make -j2
+
+      - name: example.c
+        run: cd build && ./log_example_c
+
+      - name: example.cpp
+        run: cd build && ./log_example

@@ -176,6 +176,7 @@ extern int LOG_PRINTF_IMPL(const char *fmt, ...);
 #define L_O_G_NS_GET_TID L_O_G_NS_GET_TID
 #include <cstdint>
 #ifdef _WIN32
+#include <processthreadsapi.h>
 struct L_O_G_NS_GET_TID {
 static inline uint32_t get_tid() {
   return GetCurrentThreadId();

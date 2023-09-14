@@ -1,0 +1,37 @@
+name: Windows
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  Windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: cmake build
+        shell: powershell
+        run: |
+          $env:path=$env:path.Replace("C:\Program Files\Git", "HIDE_GIT")
+          mkdir build
+          cd build
+          cmake .. -G "MinGW Makefiles"
+          mingw32-make -j2
+
+      - name: example.c
+        shell: powershell
+        run: |
+          cd build
+          ./log_example_c.exe
+
+      - name: example.cpp
+        shell: powershell
+        run: |
+          cd build
+          ./log_example.exe
