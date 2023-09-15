@@ -1,4 +1,5 @@
 #include "log.h"
+#include <cstdarg>
 
 #ifdef L_O_G_PRINTF_CUSTOM
 int my_printf(const char *fmt, ...) {

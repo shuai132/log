@@ -16,6 +16,7 @@
 // L_O_G_DISABLE_THREAD_SAFE
 // L_O_G_DISABLE_THREAD_ID
 // L_O_G_DISABLE_DATE_TIME
+// 可通过`L_O_G_GET_TID_CUSTOM`自定义获取线程ID的实现
 //
 // 2. 自定义实现
 // L_O_G_PRINTF_CUSTOM          自定义输出实现
@@ -181,7 +182,9 @@ extern int L_O_G_PRINTF_CUSTOM(const char *fmt, ...);
 #ifndef L_O_G_NS_GET_TID
 #define L_O_G_NS_GET_TID L_O_G_NS_GET_TID
 #include <cstdint>
-#ifdef _WIN32
+#ifdef L_O_G_GET_TID_CUSTOM
+extern uint32_t L_O_G_GET_TID_CUSTOM();
+#elif _WIN32
 #include <processthreadsapi.h>
 struct L_O_G_NS_GET_TID {
 static inline uint32_t get_tid() {
@@ -207,8 +210,13 @@ static inline uint32_t get_tid() {
 };
 #endif
 #endif
+#ifdef L_O_G_GET_TID_CUSTOM
+#define LOG_THREAD_LABEL "%u "
+#define LOG_THREAD_VALUE ,L_O_G_GET_TID_CUSTOM()
+#else
 #define LOG_THREAD_LABEL "%u "
 #define LOG_THREAD_VALUE ,L_O_G_NS_GET_TID::get_tid()
+#endif
 #else
 #define LOG_THREAD_LABEL
 #define LOG_THREAD_VALUE

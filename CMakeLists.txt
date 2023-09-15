@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 11)
 add_compile_options(-Wall)
 
 add_compile_definitions(
-        LOG_NOT_EXIT_ON_FATAL
-        LOG_SHOW_VERBOSE
+        L_O_G_NOT_EXIT_ON_FATAL
+        L_O_G_SHOW_VERBOSE
         ANDROID_STANDALONE
 )
 
