@@ -9,7 +9,7 @@ log for C/C++ project, by wrapper and enhance `printf`.
 * One header file
 * Colors on Unix
 * Print filename and lines automatically
-* Line feed with `\n`, or `\r\n` with `LOG_LINE_END_CRLF`
+* Line feed with `\n`, or `\r\n` with `L_O_G_LINE_END_CRLF`
 * Ignores `LOGD` in release mode
 * Support thread safe and thread id
 * Support DateTime
@@ -18,9 +18,7 @@ log for C/C++ project, by wrapper and enhance `printf`.
 
 [example](example.cpp)
 
-```c
-#define LOG_NOT_EXIT_ON_FATAL
-#define LOG_ENABLE_THREAD_SAFE
+```c++
 #include "log.h"
 
 int main() {
