@@ -23,8 +23,9 @@
 // 并添加实现`int L_O_G_PRINTF_CUSTOM(const char *fmt, ...)`
 //
 // 3. 在库中使用时
-// 3.1. 替换`LOG`为库名即可
-// 3.2. 可配置项
+// 3.1. 替换`LOG`为库名
+// 3.2. 定义`LOG_IN_LIB`
+// 3.3. 可配置项
 // LOG_SHOW_DEBUG               开启LOGD的输出
 // LOG_SHOW_VERBOSE             显示LOGV的输出
 // LOG_DISABLE_ALL              关闭所有日志
@@ -33,13 +34,7 @@
 
 // clang-format off
 
-#define LOG_CHECK_CAT_(a,b) a##b
-#define LOG_CHECK_CAT(a, b) LOG_CHECK_CAT_(a, b)
-#define LOG_CHECK_IN_LIB_FLAG 1
-#define LOG_CHECK_IN_LIB
-#if !LOG_CHECK_CAT(L, OG_CHECK_IN_LIB_FLAG)
-#define LOG_IN_LIB
-#endif
+//#define LOG_IN_LIB
 
 #if defined(LOG_DISABLE_ALL) || defined(L_O_G_DISABLE_ALL)
 
