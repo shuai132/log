@@ -23,10 +23,9 @@
 // 并添加实现`int L_O_G_PRINTF_CUSTOM(const char *fmt, ...)`
 //
 // 3. 在库中使用时
-// 3.1. 修改此文件中的`LOG`以包含库名前缀（全部替换即可）
-// 3.2. 取消这行注释（以屏蔽DEBUG日志）: #define LOG_IN_LIB
-// 3.3. 库可配置项
-// LOG_SHOW_DEBUG               开启LOGD的输出（非库中依据NDEBUG宏）
+// 3.1. 替换`LOG`为库名即可
+// 3.2. 可配置项
+// LOG_SHOW_DEBUG               开启LOGD的输出
 // LOG_SHOW_VERBOSE             显示LOGV的输出
 // LOG_DISABLE_ALL              关闭所有日志
 
@@ -34,11 +33,12 @@
 
 // clang-format off
 
-// 自定义配置
-//#include "log_config.h"
+#define LOG_CHECK_IN_LIB_FLAG 1
+#define LOG_CHECK_IN_LIB L##OG_CHECK_IN_LIB_FLAG
 
-// 在库中使用时需取消注释
-//#define LOG_IN_LIB
+#if LOG_CHECK_IN_LIB != LOG_CHECK_IN_LIB_FLAG
+#define LOG_IN_LIB
+#endif
 
 #if defined(LOG_DISABLE_ALL) || defined(L_O_G_DISABLE_ALL)
 
