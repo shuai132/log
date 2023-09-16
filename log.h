@@ -257,6 +257,10 @@ static inline std::string get_time() {
 #define LOG_NDEBUG
 #endif
 
+#if defined(L_O_G_NDEBUG) && !defined(LOG_NDEBUG)
+#define LOG_NDEBUG
+#endif
+
 #if (defined(NDEBUG) || defined(LOG_NDEBUG)) && !defined(L_O_G_SHOW_DEBUG)
 #define LOGD(fmt, ...)          ((void)0)
 #else

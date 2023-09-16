@@ -7,7 +7,7 @@ add_compile_options(-Wall)
 
 add_compile_definitions(
         L_O_G_NOT_EXIT_ON_FATAL
-        L_O_G_SHOW_VERBOSE
+        LOG_SHOW_VERBOSE
         ANDROID_STANDALONE
 )
 
