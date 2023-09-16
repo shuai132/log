@@ -33,10 +33,11 @@
 
 // clang-format off
 
+#define LOG_CHECK_CAT_(a,b) a##b
+#define LOG_CHECK_CAT(a, b) LOG_CHECK_CAT_(a, b)
 #define LOG_CHECK_IN_LIB_FLAG 1
-#define LOG_CHECK_IN_LIB L##OG_CHECK_IN_LIB_FLAG
-
-#if LOG_CHECK_IN_LIB != LOG_CHECK_IN_LIB_FLAG
+#define LOG_CHECK_IN_LIB
+#if !LOG_CHECK_CAT(L, OG_CHECK_IN_LIB_FLAG)
 #define LOG_IN_LIB
 #endif
 
