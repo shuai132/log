@@ -134,9 +134,9 @@
 #ifndef LOG_PRINTF_DEFAULT
 #if defined(__ANDROID__) && !defined(ANDROID_STANDALONE)
 #include <android/log.h>
-#define LOG_PRINTF_DEFAULT(...) __android_log_print(ANDROID_L##OG_DEBUG, "LOG", __VA_ARGS__)
+#define LOG_PRINTF_DEFAULT(fmt, ...) __android_log_print(ANDROID_L##OG_DEBUG, "LOG", fmt, __VA_ARGS__)
 #else
-#define LOG_PRINTF_DEFAULT(...) printf(__VA_ARGS__)
+#define LOG_PRINTF_DEFAULT(fmt, ...) printf(fmt, __VA_ARGS__)
 #endif
 #endif
 
@@ -161,16 +161,16 @@ static std::mutex& mutex() {
 }
 };
 #endif
-#define L_O_G_PRINTF(...) { \
+#define L_O_G_PRINTF(fmt, ...) { \
   std::lock_guard<std::mutex> lock(L_O_G_NS_MUTEX::mutex()); \
-  LOG_PRINTF_DEFAULT(__VA_ARGS__); \
+  LOG_PRINTF_DEFAULT(fmt, __VA_ARGS__); \
 }
 #else
-#define L_O_G_PRINTF(...)       LOG_PRINTF_DEFAULT(__VA_ARGS__)
+#define L_O_G_PRINTF(fmt, ...)  LOG_PRINTF_DEFAULT(fmt, __VA_ARGS__)
 #endif
 #else
 extern int L_O_G_PRINTF_CUSTOM(const char *fmt, ...);
-#define L_O_G_PRINTF(...)       L_O_G_PRINTF_CUSTOM(__VA_ARGS__)
+#define L_O_G_PRINTF(fmt, ...)  L_O_G_PRINTF_CUSTOM(fmt, __VA_ARGS__)
 #endif
 #endif
 
