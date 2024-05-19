@@ -51,7 +51,7 @@
 #ifdef __cplusplus
 #include <cstring>
 #include <cstdlib>
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201103L || defined(_MSC_VER)
 
 #if !defined(L_O_G_DISABLE_THREAD_SAFE) && !defined(L_O_G_ENABLE_THREAD_SAFE)
 #define L_O_G_ENABLE_THREAD_SAFE
@@ -180,6 +180,7 @@ extern int L_O_G_PRINTF_CUSTOM(const char *fmt, ...);
 #ifdef L_O_G_GET_TID_CUSTOM
 extern uint32_t L_O_G_GET_TID_CUSTOM();
 #elif defined(_WIN32)
+#include <Windows.h>
 #include <processthreadsapi.h>
 struct L_O_G_NS_GET_TID {
 static inline uint32_t get_tid() {
@@ -229,7 +230,13 @@ static inline std::string get_time() {
   std::time_t time = std::chrono::system_clock::to_time_t(now);
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
   std::stringstream ss;
-  ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S") << '.' << std::setw(3) << std::setfill('0') << ms.count();
+  std::tm dst; // NOLINT
+#ifdef _MSC_VER
+  ::localtime_s(&dst, &time);
+#else
+  dst = *std::localtime(&time);
+#endif
+  ss << std::put_time(&dst, "%Y-%m-%d %H:%M:%S") << '.' << std::setw(3) << std::setfill('0') << ms.count();
   return ss.str();
 }
 };
