@@ -3,10 +3,14 @@ cmake_minimum_required(VERSION 3.5)
 project(LOG)
 
 set(CMAKE_CXX_STANDARD 11)
-add_compile_options(-Wall)
 
 if (MSVC)
-    add_compile_options(/Zc:__cplusplus)
+    add_compile_options(/Zc:preprocessor)
+    add_compile_options(/utf-8)
+    add_compile_options(-DNOMINMAX)
+    add_compile_options(-D_WIN32_WINNT=0x0601)
+else ()
+    add_compile_options(-Wall -Wunused-parameter)
 endif ()
 
 add_compile_definitions(
