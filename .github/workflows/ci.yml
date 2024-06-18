@@ -56,8 +56,14 @@ jobs:
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
 
-      - name: Test(Unix)
-        if: matrix.os != 'windows-latest'
+      - name: Remove exe suffix
+        if: matrix.os == 'windows-latest'
+        working-directory: build
+        run: |
+          Move-Item -Path .\${{ matrix.configuration }}\* -Destination .\ -ErrorAction SilentlyContinue
+          Get-ChildItem . -Filter *.exe | Rename-Item -NewName { $_.Name -replace '\.exe$','' }
+
+      - name: Test
         working-directory: build
         run: |
           ./log_example
@@ -66,16 +72,3 @@ jobs:
           ./log_example_disable_thread_id
           ./log_example_disable_date_time
           ./log_example_disable_ts_ti_dt
-
-      - name: Test(Windows)
-        if: matrix.os == 'windows-latest'
-        working-directory: build
-        shell: powershell
-        run: |
-          if ("${{ matrix.compiler }}" -eq "msvc" ) { cd ${{ matrix.configuration }} }
-          ./log_example.exe
-          ./log_example_c.exe
-          ./log_example_disable_thread_safe.exe
-          ./log_example_disable_thread_id.exe
-          ./log_example_disable_date_time.exe
-          ./log_example_disable_ts_ti_dt.exe
