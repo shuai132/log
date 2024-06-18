@@ -40,11 +40,14 @@ jobs:
           - toolchain: windows-msvc
             os: windows-latest
             compiler: msvc
+            env:
+              BIN_SUFFIX: ".exe"
 
           - toolchain: windows-mingw
             os: windows-latest
             compiler: mingw
             env:
+              BIN_SUFFIX: ".exe"
               CMAKE_OPTIONS: "-G \"MinGW Makefiles\""
 
     steps:
@@ -54,21 +57,19 @@ jobs:
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ matrix.env.CMAKE_OPTIONS }}
 
       - name: Build with ${{ matrix.compiler }}
-        run: cmake --build build --config ${{ matrix.configuration }}
+        run: cmake --build build --config ${{ matrix.configuration }} -j
 
-      - name: Remove exe suffix
-        if: matrix.os == 'windows-latest'
+      - name: Windows-MSVC Compatible
+        if: matrix.os == 'windows-latest' && matrix.compiler == 'msvc'
         working-directory: build
-        run: |
-          Move-Item -Path .\${{ matrix.configuration }}\* -Destination .\ -ErrorAction SilentlyContinue
-          Get-ChildItem . -Filter *.exe | Rename-Item -NewName { $_.Name -replace '\.exe$','' }
+        run: Move-Item -Path .\${{ matrix.configuration }}\* -Destination .\
 
       - name: Test
         working-directory: build
         run: |
-          ./log_example
-          ./log_example_c
-          ./log_example_disable_thread_safe
-          ./log_example_disable_thread_id
-          ./log_example_disable_date_time
-          ./log_example_disable_ts_ti_dt
+          ./log_example${{ matrix.env.BIN_SUFFIX }}
+          ./log_example_c${{ matrix.env.BIN_SUFFIX }}
+          ./log_example_disable_thread_safe${{ matrix.env.BIN_SUFFIX }}
+          ./log_example_disable_thread_id${{ matrix.env.BIN_SUFFIX }}
+          ./log_example_disable_date_time${{ matrix.env.BIN_SUFFIX }}
+          ./log_example_disable_ts_ti_dt${{ matrix.env.BIN_SUFFIX }}
