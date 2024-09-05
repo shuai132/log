@@ -39,6 +39,7 @@
 #if defined(LOG_DISABLE_ALL) || defined(L_O_G_DISABLE_ALL)
 
 #define LOG(fmt, ...)           ((void)0)
+#define LOGR(fmt, ...)          ((void)0)
 #define LOGT(tag, fmt, ...)     ((void)0)
 #define LOGI(fmt, ...)          ((void)0)
 #define LOGW(fmt, ...)          ((void)0)
@@ -257,6 +258,7 @@ static inline std::string get_time() {
 #endif
 
 #define LOG(fmt, ...)           do{ L_O_G_PRINTF(LOG_COLOR_GREEN   LOG_TIME_LABEL LOG_THREAD_LABEL "[*]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
+#define LOGR(fmt, ...)          do{ L_O_G_PRINTF(fmt, ##__VA_ARGS__);   } while(0)
 #define LOGT(tag, fmt, ...)     do{ L_O_G_PRINTF(LOG_COLOR_BLUE    LOG_TIME_LABEL LOG_THREAD_LABEL "[" tag "]: %s:%d " fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
 #define LOGI(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_YELLOW  LOG_TIME_LABEL LOG_THREAD_LABEL "[I]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
 #define LOGW(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_CARMINE LOG_TIME_LABEL LOG_THREAD_LABEL "[W]: %s:%d [%s] "  fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, __func__, ##__VA_ARGS__); } while(0)                     // NOLINT(bugprone-lambda-function-name)

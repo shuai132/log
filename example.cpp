@@ -18,6 +18,7 @@ int my_printf(const char *fmt, ...) {
 
 int main() {
   LOG("log");
+  LOGR("raw" LOG_LINE_END);
   LOGT("T", "msg with tag");
   LOGD("debug");
   LOGI("info");
