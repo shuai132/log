@@ -27,5 +27,9 @@ int main() {
   LOGF("fatal");
   LOGV("verbose");
   [] { LOGE("in lambda"); }();
+
+  LOGR("raw");
+  LOGLN();
+  LOGRLN("raw");
   return 0;
 }

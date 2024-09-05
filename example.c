@@ -2,7 +2,6 @@
 
 int main() {
   LOG("log");
-  LOGR("raw" LOG_LINE_END);
   LOGT("T", "msg with tag");
   LOGD("debug");
   LOGI("info");
@@ -10,5 +9,9 @@ int main() {
   LOGE("error");
   LOGF("fatal");
   LOGV("verbose");
+
+  LOGR("raw");
+  LOGLN();
+  LOGRLN("raw");
   return 0;
 }
