@@ -36,20 +36,24 @@
 
 //#define LOG_IN_LIB
 
+inline void L_O_G_VOID(const char *fmt, ...) {
+  (void)(fmt);
+}
+
 #if defined(LOG_DISABLE_ALL) || defined(L_O_G_DISABLE_ALL)
 
-#define LOG(fmt, ...)           ((void)0)
-#define LOGT(tag, fmt, ...)     ((void)0)
-#define LOGI(fmt, ...)          ((void)0)
-#define LOGW(fmt, ...)          ((void)0)
-#define LOGE(fmt, ...)          ((void)0)
-#define LOGF(fmt, ...)          ((void)0)
-#define LOGD(fmt, ...)          ((void)0)
-#define LOGV(fmt, ...)          ((void)0)
+#define LOG(fmt, ...)           L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGT(tag, fmt, ...)     L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGI(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGW(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGE(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGF(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGD(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGV(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
 
-#define LOGR(fmt, ...)          ((void)0)
+#define LOGR(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
 #define LOGLN()                 ((void)0)
-#define LOGRLN(fmt, ...)        ((void)0)
+#define LOGRLN(fmt, ...)        L_O_G_VOID(fmt, ##__VA_ARGS__)
 
 #else
 
@@ -281,7 +285,7 @@ static inline std::string get_time() {
 #endif
 
 #if (defined(NDEBUG) || defined(LOG_NDEBUG)) && !defined(L_O_G_SHOW_DEBUG)
-#define LOGD(fmt, ...)          ((void)0)
+#define LOGD(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
 #else
 #define LOGD(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[D]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
 #endif
@@ -289,7 +293,7 @@ static inline std::string get_time() {
 #if defined(LOG_SHOW_VERBOSE)
 #define LOGV(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[V]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
 #else
-#define LOGV(fmt, ...)          ((void)0)
+#define LOGV(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
 #endif
 
 #endif
