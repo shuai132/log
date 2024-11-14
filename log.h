@@ -36,6 +36,14 @@
 
 //#define LOG_IN_LIB
 
+// version
+#define LOG_VER_MAJOR 1
+#define LOG_VER_MINOR 0
+#define LOG_VER_PATCH 0
+#define LOG_TO_VERSION(major, minor, patch) (major * 10000 + minor * 100 + patch)
+#define LOG_VERSION LOG_TO_VERSION(LOG_VER_MAJOR, LOG_VER_MINOR, LOG_VER_PATCH)
+
+// suppress compile warnings
 inline void L_O_G_VOID(const char *fmt, ...) {
   (void)(fmt);
 }
