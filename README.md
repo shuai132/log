@@ -1,6 +1,6 @@
 # log
 
-[![Build Status](https://github.com/shuai132/LOG/workflows/build/badge.svg)](https://github.com/shuai132/LOG/actions?workflow=build)
+[![Build Status](https://github.com/shuai132/LOG/workflows/CI/badge.svg)](https://github.com/shuai132/LOG/actions?workflow=CI)
 
 log for C/C++ project, by wrapper and enhance `printf`.
 
