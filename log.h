@@ -284,24 +284,60 @@ static inline std::string get_time() {
 #define LOGLN()                 LOGR(LOG_LINE_END)
 #define LOGRLN(fmt, ...)        do{ L_O_G_PRINTF(fmt LOG_END, ##__VA_ARGS__); } while(0)
 
+// in-lib should define no-debug by default, if not enable by user
 #if defined(LOG_IN_LIB) && !defined(LOG_SHOW_DEBUG) && !defined(L_O_G_NDEBUG)
+#ifndef LOG_NDEBUG
 #define LOG_NDEBUG
 #endif
+#endif
 
-#if defined(L_O_G_NDEBUG) && !defined(LOG_NDEBUG)
+#if defined(L_O_G_NDEBUG)
+#ifndef LOG_NDEBUG
 #define LOG_NDEBUG
+#endif
 #endif
 
 #if (defined(NDEBUG) || defined(LOG_NDEBUG)) && !defined(L_O_G_SHOW_DEBUG)
-#define LOGD(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#ifndef LOG_NDEBUG
+#define LOG_NDEBUG
+#endif
 #else
+#ifndef LOG_SHOW_DEBUG
+#define LOG_SHOW_DEBUG
+#endif
+#endif
+
+#if defined(LOG_SHOW_DEBUG)
 #define LOGD(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[D]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
+#else
+#define LOGD(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
 #endif
 
 #if defined(LOG_SHOW_VERBOSE)
 #define LOGV(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[V]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
 #else
 #define LOGV(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#endif
+
+/// logic check
+#if defined(L_O_G_SHOW_DEBUG) && !defined(LOG_SHOW_DEBUG)
+#error
+#endif
+
+#if defined(L_O_G_NDEBUG) && !defined(LOG_NDEBUG)
+#error
+#endif
+
+#if defined(L_O_G_DISABLE_ALL) && !defined(LOG_DISABLE_ALL)
+#error
+#endif
+
+#if defined(LOG_NDEBUG) && defined(LOG_SHOW_DEBUG)
+#error
+#endif
+
+#if !(defined(LOG_NDEBUG) || defined(LOG_SHOW_DEBUG))
+#error
 #endif
 
 #endif
