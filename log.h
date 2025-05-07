@@ -2,6 +2,7 @@
 // L_O_G_NDEBUG                 disable debug log(auto by NDEBUG)
 // L_O_G_SHOW_DEBUG             force enable debug log
 // L_O_G_DISABLE_ALL            force disable all log
+// L_O_G_DISABLE_HEX            disable hex function
 // L_O_G_DISABLE_COLOR          disable color
 // L_O_G_LINE_END_CRLF
 // L_O_G_SHOW_FULL_PATH
@@ -293,7 +294,12 @@ static inline std::string get_time() {
 #define LOGLN()                 LOGR(LOG_LINE_END)
 #define LOGRLN(fmt, ...)        do{ L_O_G_PRINTF(fmt LOG_END, ##__VA_ARGS__); } while(0)
 
-// for hex print
+// for hex print, enable by default
+#if !defined(L_O_G_DISABLE_HEX) && !defined(L_O_G_ENABLE_HEX)
+#define L_O_G_ENABLE_HEX
+#endif
+
+#ifdef L_O_G_ENABLE_HEX
 #define LOG_HEX                 L_O_G_HEX
 #define LOG_HEX_H               L_O_G_HEX_H
 #define LOG_HEX_C               L_O_G_HEX_C
@@ -356,6 +362,7 @@ L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t siz
 
 #define L_O_G_HEX_C(data, size) L_O_G_HEX_CHAR("%c", data, size);
 #define L_O_G_HEX_D(data, size) L_O_G_HEX_CHAR(" %c ", data, size);
+#endif
 
 // in-lib should define no-debug by default, if not enable by user
 #if defined(LOG_IN_LIB) && !defined(LOG_SHOW_DEBUG) && !defined(L_O_G_NDEBUG)
@@ -421,11 +428,7 @@ L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t siz
 #error
 #endif
 
-#if defined(LOG_NDEBUG) && defined(LOG_SHOW_DEBUG)
-#error
-#endif
-
-#if !(defined(LOG_NDEBUG) || defined(LOG_SHOW_DEBUG))
+#if !defined(LOG_NDEBUG) && !defined(LOG_SHOW_DEBUG)
 #error
 #endif
 
