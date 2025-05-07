@@ -39,12 +39,18 @@
 // version
 #define LOG_VER_MAJOR 1
 #define LOG_VER_MINOR 0
-#define LOG_VER_PATCH 0
+#define LOG_VER_PATCH 1
 #define LOG_TO_VERSION(major, minor, patch) (major * 10000 + minor * 100 + patch)
 #define LOG_VERSION LOG_TO_VERSION(LOG_VER_MAJOR, LOG_VER_MINOR, LOG_VER_PATCH)
 
-// suppress compile warnings
-inline void L_O_G_VOID(const char *fmt, ...) {
+#ifdef __cplusplus
+#define L_O_G_INLINE inline
+#else
+#define L_O_G_INLINE static inline
+#endif
+
+// suppress compile warnings, ensure params will be used
+L_O_G_INLINE void L_O_G_VOID(const char *fmt, ...) {
   (void)(fmt);
 }
 
@@ -284,6 +290,58 @@ static inline std::string get_time() {
 #define LOGLN()                 LOGR(LOG_LINE_END)
 #define LOGRLN(fmt, ...)        do{ L_O_G_PRINTF(fmt LOG_END, ##__VA_ARGS__); } while(0)
 
+// for hex print
+#define LOG_HEX                 L_O_G_HEX
+#define LOG_HEX_H               L_O_G_HEX_H
+#define LOG_HEX_C               L_O_G_HEX_C
+#define LOG_HEX_D               L_O_G_HEX_D
+#include <stddef.h>
+#include <stdint.h>
+#include <ctype.h>
+#include <stdio.h>
+
+L_O_G_INLINE void L_O_G_HEX(const void *data, size_t size) {
+  const unsigned char *byte = (const unsigned char *)data;
+  uint32_t offset = 0;
+  while (offset < size) {
+    L_O_G_PRINTF("%08X  ", offset);
+    char hex_buffer[16 * 3 + 1] = {0};
+    char ascii_buffer[16 + 1] = {0};
+    for (int i = 0; i < 16; i++) {
+      if (offset + i < size) {
+        unsigned char b = byte[offset + i];
+        snprintf(hex_buffer + i * 3, 4, "%02X ", b);
+        ascii_buffer[i] = (char)(isprint(b) ? b : '.');
+      } else {
+        snprintf(hex_buffer + i * 3, 4, "   ");
+        ascii_buffer[i] = ' ';
+      }
+    }
+    L_O_G_PRINTF("%-48s %s" LOG_LINE_END, hex_buffer, ascii_buffer);
+    offset += 16;
+  }
+}
+
+L_O_G_INLINE void L_O_G_HEX_H(const void *data, size_t size) {
+  const char *bytes = (const char *)data;
+  for (size_t i = 0; i < size; ++i) {
+    L_O_G_PRINTF("%02X ", bytes[i]);
+  }
+  L_O_G_PRINTF(LOG_LINE_END);
+}
+
+L_O_G_INLINE void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t size) {
+  const char *bytes = (const char *)data;
+  for (size_t i = 0; i < size; ++i) {
+    char c = bytes[i];
+    L_O_G_PRINTF(fmt, isprint(c) ? c : '.');
+  }
+  L_O_G_PRINTF(LOG_LINE_END);
+}
+
+#define L_O_G_HEX_C(data, size) L_O_G_HEX_CHAR("%c", data, size);
+#define L_O_G_HEX_D(data, size) L_O_G_HEX_CHAR(" %c ", data, size);
+
 // in-lib should define no-debug by default, if not enable by user
 #if defined(LOG_IN_LIB) && !defined(LOG_SHOW_DEBUG) && !defined(L_O_G_NDEBUG)
 #ifndef LOG_NDEBUG
@@ -309,14 +367,30 @@ static inline std::string get_time() {
 
 #if defined(LOG_SHOW_DEBUG)
 #define LOGD(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[D]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
+#define LOGD_HEX                L_O_G_HEX
+#define LOGD_HEX_H              L_O_G_HEX_H
+#define LOGD_HEX_C              L_O_G_HEX_C
+#define LOGD_HEX_D              L_O_G_HEX_D
 #else
-#define LOGD(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGD(fmt, ...)          ((void)0)
+#define LOGD_HEX(...)           ((void)0)
+#define LOGD_HEX_H(...)         ((void)0)
+#define LOGD_HEX_C(...)         ((void)0)
+#define LOGD_HEX_D(...)         ((void)0)
 #endif
 
 #if defined(LOG_SHOW_VERBOSE)
 #define LOGV(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[V]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
+#define LOGV_HEX                L_O_G_HEX
+#define LOGV_HEX_H              L_O_G_HEX_H
+#define LOGV_HEX_C              L_O_G_HEX_C
+#define LOGV_HEX_D              L_O_G_HEX_C
 #else
-#define LOGV(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
+#define LOGV(fmt, ...)          ((void)0)
+#define LOGV_HEX(...)           ((void)0)
+#define LOGV_HEX_H(...)         ((void)0)
+#define LOGV_HEX_C(...)         ((void)0)
+#define LOGV_HEX_D(...)         ((void)0)
 #endif
 
 /// logic check

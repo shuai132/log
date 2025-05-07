@@ -1,5 +1,8 @@
 #include "log.h"
 
+// test hex
+#include "hex_test.ipp"
+
 int main() {
   LOG("log");
   LOGT("T", "msg with tag");
@@ -13,5 +16,8 @@ int main() {
   LOGR("raw");
   LOGLN();
   LOGRLN("raw");
+
+  test_hex();
+
   return 0;
 }

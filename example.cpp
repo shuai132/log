@@ -1,6 +1,9 @@
 #include "log.h"
 #include <cstdarg>
 
+// test hex
+#include "hex_test.ipp"
+
 #ifdef L_O_G_PRINTF_CUSTOM
 int my_printf(const char *fmt, ...) {
   va_list vl;
@@ -31,5 +34,8 @@ int main() {
   LOGR("raw");
   LOGLN();
   LOGRLN("raw");
+
+  test_hex();
+
   return 0;
 }
