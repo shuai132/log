@@ -44,15 +44,18 @@
 #define LOG_VERSION LOG_TO_VERSION(LOG_VER_MAJOR, LOG_VER_MINOR, LOG_VER_PATCH)
 
 #ifdef __cplusplus
-#define L_O_G_INLINE inline
+#define L_O_G_FUNCTION extern "C" inline
 #else
-#define L_O_G_INLINE static inline
+#define L_O_G_FUNCTION static inline
 #endif
 
 // suppress compile warnings, ensure params will be used
-L_O_G_INLINE void L_O_G_VOID(const char *fmt, ...) {
+#ifndef L_O_G_VOID
+#define L_O_G_VOID L_O_G_VOID
+L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
   (void)(fmt);
 }
+#endif
 
 #if defined(LOG_DISABLE_ALL) || defined(L_O_G_DISABLE_ALL)
 
@@ -299,8 +302,13 @@ static inline std::string get_time() {
 #include <stdint.h>
 #include <ctype.h>
 #include <stdio.h>
+#ifdef ARDUINO
+#include <Arduino.h>
+#endif
 
-L_O_G_INLINE void L_O_G_HEX(const void *data, size_t size) {
+#ifndef L_O_G_HEX
+#define L_O_G_HEX L_O_G_HEX
+L_O_G_FUNCTION void L_O_G_HEX(const void *data, size_t size) {
   const unsigned char *byte = (const unsigned char *)data;
   uint32_t offset = 0;
   while (offset < size) {
@@ -321,16 +329,22 @@ L_O_G_INLINE void L_O_G_HEX(const void *data, size_t size) {
     offset += 16;
   }
 }
+#endif
 
-L_O_G_INLINE void L_O_G_HEX_H(const void *data, size_t size) {
+#ifndef L_O_G_HEX_H
+#define L_O_G_HEX_H L_O_G_HEX_H
+L_O_G_FUNCTION void L_O_G_HEX_H(const void *data, size_t size) {
   const char *bytes = (const char *)data;
   for (size_t i = 0; i < size; ++i) {
     L_O_G_PRINTF("%02X ", bytes[i]);
   }
   L_O_G_PRINTF(LOG_LINE_END);
 }
+#endif
 
-L_O_G_INLINE void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t size) {
+#ifndef L_O_G_HEX_CHAR
+#define L_O_G_HEX_CHAR L_O_G_HEX_CHAR
+L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t size) {
   const char *bytes = (const char *)data;
   for (size_t i = 0; i < size; ++i) {
     char c = bytes[i];
@@ -338,6 +352,7 @@ L_O_G_INLINE void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t size)
   }
   L_O_G_PRINTF(LOG_LINE_END);
 }
+#endif
 
 #define L_O_G_HEX_C(data, size) L_O_G_HEX_CHAR("%c", data, size);
 #define L_O_G_HEX_D(data, size) L_O_G_HEX_CHAR(" %c ", data, size);

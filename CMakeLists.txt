@@ -20,8 +20,8 @@ add_compile_definitions(
 )
 
 # default
-add_executable(log_example example.cpp)
-add_executable(log_example_c example.c)
+add_executable(log_example example.cpp redefine_check.c redefine_check.cpp)
+add_executable(log_example_c example.c redefine_check.c redefine_check.cpp)
 
 # custom define
 add_executable(log_example_disable_thread_safe example.cpp)
