@@ -26,7 +26,7 @@
 //
 // 3. use in library
 // 3.1. rename `LOG` to library name
-// 3.2. define `LOG_IN_LIB`
+// 3.2. define `LOG_HIDE_DEBUG`
 // 3.3. configuration options
 // LOG_SHOW_DEBUG
 // LOG_SHOW_VERBOSE
@@ -36,7 +36,7 @@
 
 // clang-format off
 
-//#define LOG_IN_LIB
+//#define LOG_HIDE_DEBUG
 
 // version
 #define LOG_VER_MAJOR 1
@@ -376,7 +376,7 @@ L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t siz
 #endif
 
 // in-lib should define no-debug by default, if not enable by user
-#if defined(LOG_IN_LIB) && !defined(LOG_SHOW_DEBUG) && !defined(L_O_G_NDEBUG)
+#if defined(LOG_HIDE_DEBUG) && !defined(LOG_SHOW_DEBUG) && !defined(L_O_G_NDEBUG)
 #ifndef LOG_NDEBUG
 #define LOG_NDEBUG
 #endif
