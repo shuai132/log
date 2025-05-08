@@ -22,6 +22,7 @@
 // 2. custom implements
 // L_O_G_PRINTF_CUSTOM          int L_O_G_PRINTF_CUSTOM(const char *fmt, ...)
 // L_O_G_GET_TID_CUSTOM         uint32_t L_O_G_GET_TID_CUSTOM()
+// L_O_G_GET_TIME_CUSTOM        std::string L_O_G_GET_TIME_CUSTOM()
 //
 // 3. use in library
 // 3.1. rename `LOG` to library name
@@ -253,6 +254,10 @@ static inline uint32_t get_tid() {
 #endif
 
 #ifdef L_O_G_ENABLE_DATE_TIME
+#include <string>
+#ifdef L_O_G_GET_TIME_CUSTOM
+extern std::string L_O_G_GET_TIME_CUSTOM();
+#else
 #include <chrono>
 #include <sstream>
 #include <iomanip> // std::put_time
@@ -275,8 +280,14 @@ static inline std::string get_time() {
 }
 };
 #endif
+#endif
+#ifdef L_O_G_GET_TIME_CUSTOM
+#define LOG_TIME_LABEL "%s "
+#define LOG_TIME_VALUE ,L_O_G_GET_TIME_CUSTOM().c_str()
+#else
 #define LOG_TIME_LABEL "%s "
 #define LOG_TIME_VALUE ,L_O_G_NS_GET_TIME::get_time().c_str()
+#endif
 #else
 #define LOG_TIME_LABEL
 #define LOG_TIME_VALUE
