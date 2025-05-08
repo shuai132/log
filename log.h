@@ -351,7 +351,7 @@ L_O_G_FUNCTION void L_O_G_HEX(const void *data, size_t size) {
 #ifndef L_O_G_HEX_H
 #define L_O_G_HEX_H L_O_G_HEX_H
 L_O_G_FUNCTION void L_O_G_HEX_H(const void *data, size_t size) {
-  const char *bytes = (const char *)data;
+  const unsigned char *bytes = (const unsigned char *)data;
   for (size_t i = 0; i < size; ++i) {
     L_O_G_PRINTF("%02X ", bytes[i]);
   }
@@ -362,9 +362,9 @@ L_O_G_FUNCTION void L_O_G_HEX_H(const void *data, size_t size) {
 #ifndef L_O_G_HEX_CHAR
 #define L_O_G_HEX_CHAR L_O_G_HEX_CHAR
 L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t size) {
-  const char *bytes = (const char *)data;
+  const unsigned char *bytes = (const unsigned char *)data;
   for (size_t i = 0; i < size; ++i) {
-    char c = bytes[i];
+    unsigned char c = bytes[i];
     L_O_G_PRINTF(fmt, isprint(c) ? c : '.');
   }
   L_O_G_PRINTF(LOG_LINE_END);
