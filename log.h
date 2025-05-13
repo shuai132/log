@@ -29,7 +29,7 @@
 //
 // 3. use in library
 // 3.1. rename `LOG` to library name
-// 3.2. define `LOG_HIDE_DEBUG`
+// 3.2. will define `LOG_HIDE_DEBUG`
 // 3.3. configuration options
 // LOG_SHOW_DEBUG
 // LOG_SHOW_VERBOSE
@@ -55,8 +55,14 @@
 #endif
 #endif
 
-//#define LOG_HIDE_DEBUG
+// auto define LOG_HIDE_DEBUG in library
+#define LOG_CHECK_RENAME_HELPER 1
+#define LOG_CHECK_RENAME L##OG_CHECK_RENAME_HELPER
+#if LOG_CHECK_RENAME != LOG_CHECK_RENAME_HELPER
+#define LOG_HIDE_DEBUG
+#endif
 
+// inline for global function
 #ifdef __cplusplus
 #define L_O_G_FUNCTION extern "C" inline
 #else
