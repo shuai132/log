@@ -1,9 +1,12 @@
+// Version: 1.0.1
+//
 // 1. global control
 // L_O_G_NDEBUG                 disable debug log(auto by NDEBUG)
 // L_O_G_SHOW_DEBUG             force enable debug log
 // L_O_G_DISABLE_ALL            force disable all log
 // L_O_G_DISABLE_HEX            disable hex function
 // L_O_G_DISABLE_COLOR          disable color
+// L_O_G_DISABLE_VERSION_CHECK  disable version check
 // L_O_G_LINE_END_CRLF
 // L_O_G_SHOW_FULL_PATH
 // L_O_G_FOR_MCU
@@ -36,14 +39,23 @@
 
 // clang-format off
 
-//#define LOG_HIDE_DEBUG
-
 // version
 #define LOG_VER_MAJOR 1
 #define LOG_VER_MINOR 0
 #define LOG_VER_PATCH 1
 #define LOG_TO_VERSION(major, minor, patch) (major * 10000 + minor * 100 + patch)
 #define LOG_VERSION LOG_TO_VERSION(LOG_VER_MAJOR, LOG_VER_MINOR, LOG_VER_PATCH)
+
+// version check
+#ifndef L_O_G_VER_MAJOR
+#define L_O_G_VER_MAJOR LOG_VER_MAJOR
+#else
+#if !defined(L_O_G_DISABLE_VERSION_CHECK) && (L_O_G_VER_MAJOR != LOG_VER_MAJOR)
+#error "version incompatible"
+#endif
+#endif
+
+//#define LOG_HIDE_DEBUG
 
 #ifdef __cplusplus
 #define L_O_G_FUNCTION extern "C" inline
@@ -61,6 +73,10 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 
 #if defined(LOG_DISABLE_ALL) || defined(L_O_G_DISABLE_ALL)
 
+#ifndef L_O_G_PRINTF
+#define L_O_G_PRINTF(fmt, ...)  L_O_G_VOID(fmt, ##__VA_ARGS__)
+#endif
+
 #define LOG(fmt, ...)           L_O_G_VOID(fmt, ##__VA_ARGS__)
 #define LOGT(tag, fmt, ...)     L_O_G_VOID(fmt, ##__VA_ARGS__)
 #define LOGI(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
@@ -73,6 +89,11 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 #define LOGR(fmt, ...)          L_O_G_VOID(fmt, ##__VA_ARGS__)
 #define LOGLN()                 ((void)0)
 #define LOGRLN(fmt, ...)        L_O_G_VOID(fmt, ##__VA_ARGS__)
+
+#define LOGD_HEX(...)           ((void)0)
+#define LOGD_HEX_H(...)         ((void)0)
+#define LOGD_HEX_C(...)         ((void)0)
+#define LOGD_HEX_D(...)         ((void)0)
 
 #else
 
