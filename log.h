@@ -106,6 +106,8 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 #ifdef __cplusplus
 #include <cstring>
 #include <cstdlib>
+#include <cinttypes>
+
 #if __cplusplus >= 201103L || defined(_MSC_VER)
 
 #if !defined(L_O_G_DISABLE_THREAD_SAFE) && !defined(L_O_G_ENABLE_THREAD_SAFE)
@@ -124,6 +126,7 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 #else
 #include <string.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #endif
 
 #ifdef  L_O_G_LINE_END_CRLF
@@ -269,10 +272,10 @@ static inline uint32_t get_tid() {
 #endif
 #endif
 #ifdef L_O_G_GET_TID_CUSTOM
-#define LOG_THREAD_LABEL "%u "
+#define LOG_THREAD_LABEL "%u" PRIu32 " "
 #define LOG_THREAD_VALUE ,L_O_G_GET_TID_CUSTOM()
 #else
-#define LOG_THREAD_LABEL "%u "
+#define LOG_THREAD_LABEL "%u" PRIu32 " "
 #define LOG_THREAD_VALUE ,L_O_G_NS_GET_TID::get_tid()
 #endif
 #else
@@ -356,13 +359,13 @@ L_O_G_FUNCTION void L_O_G_HEX(const void *data, size_t size) {
   const unsigned char *byte = (const unsigned char *)data;
   uint32_t offset = 0;
   while (offset < size) {
-    L_O_G_PRINTF("%08X  ", offset);
+    L_O_G_PRINTF("%08" PRIX32 "  ", offset);
     char hex_buffer[16 * 3 + 1] = {0};
     char ascii_buffer[16 + 1] = {0};
     for (int i = 0; i < 16; i++) {
       if (offset + i < size) {
         unsigned char b = byte[offset + i];
-        snprintf(hex_buffer + i * 3, 4, "%02X ", b);
+        snprintf(hex_buffer + i * 3, 4, "%02" PRIX8 " ", b);
         ascii_buffer[i] = (char)(isprint(b) ? b : '.');
       } else {
         snprintf(hex_buffer + i * 3, 4, "   ");
@@ -380,7 +383,7 @@ L_O_G_FUNCTION void L_O_G_HEX(const void *data, size_t size) {
 L_O_G_FUNCTION void L_O_G_HEX_H(const void *data, size_t size) {
   const unsigned char *bytes = (const unsigned char *)data;
   for (size_t i = 0; i < size; ++i) {
-    L_O_G_PRINTF("%02X ", bytes[i]);
+    L_O_G_PRINTF("%02" PRIX8 " ", bytes[i]);
   }
   L_O_G_PRINTF(LOG_LINE_END);
 }
