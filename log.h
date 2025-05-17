@@ -272,10 +272,10 @@ static inline uint32_t get_tid() {
 #endif
 #endif
 #ifdef L_O_G_GET_TID_CUSTOM
-#define LOG_THREAD_LABEL "%u" PRIu32 " "
+#define LOG_THREAD_LABEL "%" PRIu32 " "
 #define LOG_THREAD_VALUE ,L_O_G_GET_TID_CUSTOM()
 #else
-#define LOG_THREAD_LABEL "%u" PRIu32 " "
+#define LOG_THREAD_LABEL "%" PRIu32 " "
 #define LOG_THREAD_VALUE ,L_O_G_NS_GET_TID::get_tid()
 #endif
 #else
