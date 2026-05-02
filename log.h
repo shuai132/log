@@ -96,10 +96,18 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 #define LOGLN()                 ((void)0)
 #define LOGRLN(fmt, ...)        L_O_G_VOID(fmt, ##__VA_ARGS__)
 
+#define LOG_HEX(...)            ((void)0)
+#define LOG_HEX_H(...)          ((void)0)
+#define LOG_HEX_C(...)          ((void)0)
+#define LOG_HEX_D(...)          ((void)0)
 #define LOGD_HEX(...)           ((void)0)
 #define LOGD_HEX_H(...)         ((void)0)
 #define LOGD_HEX_C(...)         ((void)0)
 #define LOGD_HEX_D(...)         ((void)0)
+#define LOGV_HEX(...)           ((void)0)
+#define LOGV_HEX_H(...)         ((void)0)
+#define LOGV_HEX_C(...)         ((void)0)
+#define LOGV_HEX_D(...)         ((void)0)
 
 #else
 
@@ -207,6 +215,7 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 #ifndef L_O_G_NS_MUTEX
 #define L_O_G_NS_MUTEX L_O_G_NS_MUTEX
 #include <mutex>
+#include <new>
 // 1. struct instead of namespace, ensure single instance
 struct L_O_G_NS_MUTEX {
 static std::mutex& mutex() {
@@ -214,7 +223,7 @@ static std::mutex& mutex() {
   // 3. static memory, avoid memory fragmentation
   // 4. ensure std::mutex is aligned
   alignas(std::mutex) static char storage[sizeof(std::mutex)];
-  static auto* mutex = new (&storage) std::mutex();
+  static auto* mutex = new (static_cast<void*>(storage)) std::mutex();
   return *mutex;
 }
 };
@@ -334,7 +343,7 @@ static inline std::string get_time() {
 // for raw print
 #define LOGR(fmt, ...)          do{ L_O_G_PRINTF(fmt, ##__VA_ARGS__);         } while(0)
 #define LOGLN()                 LOGR(LOG_LINE_END)
-#define LOGRLN(fmt, ...)        do{ L_O_G_PRINTF(fmt LOG_END, ##__VA_ARGS__); } while(0)
+#define LOGRLN(fmt, ...)        do{ L_O_G_PRINTF(fmt LOG_LINE_END, ##__VA_ARGS__); } while(0)
 
 // for hex print, enable by default
 #if !defined(L_O_G_DISABLE_HEX) && !defined(L_O_G_ENABLE_HEX)
@@ -402,8 +411,13 @@ L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t siz
 }
 #endif
 
-#define L_O_G_HEX_C(data, size) L_O_G_HEX_CHAR("%c", data, size);
-#define L_O_G_HEX_D(data, size) L_O_G_HEX_CHAR(" %c ", data, size);
+#define L_O_G_HEX_C(data, size) do{ L_O_G_HEX_CHAR("%c", data, size); } while(0)
+#define L_O_G_HEX_D(data, size) do{ L_O_G_HEX_CHAR(" %c ", data, size); } while(0)
+#else
+#define LOG_HEX(...)            ((void)0)
+#define LOG_HEX_H(...)          ((void)0)
+#define LOG_HEX_C(...)          ((void)0)
+#define LOG_HEX_D(...)          ((void)0)
 #endif
 
 // in-lib should define no-debug by default, if not enable by user
@@ -431,10 +445,17 @@ L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t siz
 
 #if defined(LOG_SHOW_DEBUG)
 #define LOGD(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[D]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
+#ifdef L_O_G_ENABLE_HEX
 #define LOGD_HEX                L_O_G_HEX
 #define LOGD_HEX_H              L_O_G_HEX_H
 #define LOGD_HEX_C              L_O_G_HEX_C
 #define LOGD_HEX_D              L_O_G_HEX_D
+#else
+#define LOGD_HEX(...)           ((void)0)
+#define LOGD_HEX_H(...)         ((void)0)
+#define LOGD_HEX_C(...)         ((void)0)
+#define LOGD_HEX_D(...)         ((void)0)
+#endif
 #else
 #define LOGD(fmt, ...)          ((void)0)
 #define LOGD_HEX(...)           ((void)0)
@@ -445,10 +466,17 @@ L_O_G_FUNCTION void L_O_G_HEX_CHAR(const char *fmt, const void *data, size_t siz
 
 #if defined(LOG_SHOW_VERBOSE)
 #define LOGV(fmt, ...)          do{ L_O_G_PRINTF(LOG_COLOR_DEFAULT LOG_TIME_LABEL LOG_THREAD_LABEL "[V]: %s:%d "       fmt LOG_END LOG_TIME_VALUE LOG_THREAD_VALUE, LOG_BASE_FILENAME, __LINE__, ##__VA_ARGS__); } while(0)
+#ifdef L_O_G_ENABLE_HEX
 #define LOGV_HEX                L_O_G_HEX
 #define LOGV_HEX_H              L_O_G_HEX_H
 #define LOGV_HEX_C              L_O_G_HEX_C
-#define LOGV_HEX_D              L_O_G_HEX_C
+#define LOGV_HEX_D              L_O_G_HEX_D
+#else
+#define LOGV_HEX(...)           ((void)0)
+#define LOGV_HEX_H(...)         ((void)0)
+#define LOGV_HEX_C(...)         ((void)0)
+#define LOGV_HEX_D(...)         ((void)0)
+#endif
 #else
 #define LOGV(fmt, ...)          ((void)0)
 #define LOGV_HEX(...)           ((void)0)
