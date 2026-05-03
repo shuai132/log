@@ -299,8 +299,8 @@ static inline uint32_t get_tid() {
 extern std::string L_O_G_GET_TIME_CUSTOM();
 #else
 #include <chrono>
-#include <sstream>
-#include <iomanip> // std::put_time
+#include <cstdio>
+#include <ctime>
 #ifndef L_O_G_NS_GET_TIME
 #define L_O_G_NS_GET_TIME L_O_G_NS_GET_TIME
 struct L_O_G_NS_GET_TIME {
@@ -308,15 +308,22 @@ static inline std::string get_time() {
   auto now = std::chrono::system_clock::now();
   std::time_t time = std::chrono::system_clock::to_time_t(now);
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-  std::stringstream ss;
-  std::tm dst; // NOLINT
+  std::tm dst{}; // NOLINT
 #ifdef _MSC_VER
   ::localtime_s(&dst, &time);
+#elif defined(__unix__) || defined(__APPLE__)
+  ::localtime_r(&time, &dst);
 #else
-  dst = *std::localtime(&time);
+  std::tm *local = std::localtime(&time);
+  if (local != nullptr) {
+    dst = *local;
+  }
 #endif
-  ss << std::put_time(&dst, "%Y-%m-%d %H:%M:%S") << '.' << std::setw(3) << std::setfill('0') << ms.count();
-  return ss.str();
+  char buffer[24];
+  std::snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d %02d:%02d:%02d.%03lld",
+                dst.tm_year + 1900, dst.tm_mon + 1, dst.tm_mday,
+                dst.tm_hour, dst.tm_min, dst.tm_sec, static_cast<long long>(ms.count()));
+  return std::string(buffer);
 }
 };
 #endif

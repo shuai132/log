@@ -4,6 +4,26 @@
 
 log for C/C++ project, by wrapper and enhance `printf`.
 
+## Design Goals
+
+`log` is designed for lightweight C/C++ projects, including applications,
+libraries, and resource-constrained targets.
+
+* Lightweight: one header file, `printf`-style output, and optional features
+  that can be disabled at compile time.
+* Low flash/code size: the default C++ DateTime implementation avoids
+  `std::stringstream`, `std::put_time`, and iostream formatting. It uses
+  `std::chrono`, `localtime_s`/`localtime_r` when available, and a fixed
+  buffer with `snprintf` to keep the timestamp format stable.
+* Cross-platform: supports C and C++, Unix-like systems, Windows, Android,
+  FreeRTOS-style targets, and MCU usage with feature switches.
+* Library-friendly: can be used inside a library without forcing debug logs on
+  downstream projects, and exposes project-level options such as
+  `LOG_SHOW_DEBUG`, `LOG_SHOW_VERBOSE`, and `LOG_DISABLE_ALL`.
+* Easy to customize: `L_O_G_PRINTF_CUSTOM`, `L_O_G_GET_TID_CUSTOM`, and
+  `L_O_G_GET_TIME_CUSTOM` let projects provide their own output, thread id, or
+  timestamp implementation.
+
 ## Features
 
 * One header file
