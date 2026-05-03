@@ -14,7 +14,11 @@ libraries, and resource-constrained targets.
 * Low flash/code size: the default C++ DateTime implementation avoids
   `std::stringstream`, `std::put_time`, and iostream formatting. It uses
   `std::chrono`, `localtime_s`/`localtime_r` when available, and a fixed
-  buffer with `snprintf` to keep the timestamp format stable.
+  buffer to keep the timestamp format stable.
+* Consistent checks: disabled logs and release-mode `LOGD` still compile and
+  evaluate their arguments through a no-output sink. This keeps debug and
+  release behavior consistent, and keeps format/argument mistakes visible at
+  compile time instead of hiding arbitrary code inside `((void)0)`.
 * Cross-platform: supports C and C++, Unix-like systems, Windows, Android,
   FreeRTOS-style targets, and MCU usage with feature switches.
 * Library-friendly: can be used inside a library without forcing debug logs on

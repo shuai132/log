@@ -77,6 +77,12 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 }
 #endif
 
+#ifdef  L_O_G_LINE_END_CRLF
+#define LOG_LINE_END            "\r\n"
+#else
+#define LOG_LINE_END            "\n"
+#endif
+
 #if defined(LOG_DISABLE_ALL) || defined(L_O_G_DISABLE_ALL)
 
 #ifndef L_O_G_PRINTF
@@ -135,12 +141,6 @@ L_O_G_FUNCTION void L_O_G_VOID(const char *fmt, ...) {
 #include <string.h>
 #include <stdlib.h>
 #include <inttypes.h>
-#endif
-
-#ifdef  L_O_G_LINE_END_CRLF
-#define LOG_LINE_END            "\r\n"
-#else
-#define LOG_LINE_END            "\n"
 #endif
 
 #ifdef L_O_G_NOT_EXIT_ON_FATAL
@@ -265,18 +265,33 @@ static inline uint32_t get_tid() {
 };
 #elif defined(L_O_G_FREERTOS) || defined(FREERTOS_CONFIG_H)
 #include <freertos/FreeRTOS.h>
+#if defined(__has_include)
+#if __has_include(<freertos/task.h>)
+#include <freertos/task.h>
+#elif __has_include(<task.h>)
+#include <task.h>
+#endif
+#else
+#include <freertos/task.h>
+#endif
 struct L_O_G_NS_GET_TID {
 static inline uint32_t get_tid() {
   return (uint32_t)xTaskGetCurrentTaskHandle();
 }
 };
-#else /* for mac, bsd.. */
+#elif defined(__APPLE__)
 #include <pthread.h>
 struct L_O_G_NS_GET_TID {
 static inline uint32_t get_tid() {
   uint64_t x;
   pthread_threadid_np(nullptr, &x);
   return (uint32_t)x;
+}
+};
+#else
+struct L_O_G_NS_GET_TID {
+static inline uint32_t get_tid() {
+  return 0;
 }
 };
 #endif
@@ -320,10 +335,16 @@ static inline std::string get_time() {
   }
 #endif
   char buffer[24];
-  std::snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d %02d:%02d:%02d.%03lld",
-                dst.tm_year + 1900, dst.tm_mon + 1, dst.tm_mday,
-                dst.tm_hour, dst.tm_min, dst.tm_sec, static_cast<long long>(ms.count()));
-  return std::string(buffer);
+  if (std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &dst) == 0) {
+    return std::string{};
+  }
+  const int ms_count = static_cast<int>(ms.count());
+  buffer[19] = '.';
+  buffer[20] = static_cast<char>('0' + ms_count / 100);
+  buffer[21] = static_cast<char>('0' + ms_count / 10 % 10);
+  buffer[22] = static_cast<char>('0' + ms_count % 10);
+  buffer[23] = '\0';
+  return std::string{buffer};
 }
 };
 #endif
